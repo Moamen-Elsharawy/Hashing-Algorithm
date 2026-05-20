@@ -8,6 +8,24 @@ __pycache__
 *.tar
 *.gz
 
+# Videos
+*.mp4
+*.mkv
+*.avi
+*.webm
+*.mov
+*.flv
+*.wmv
+*.3gp
+*.mpg
+*.mpeg
+*.ogv
+*.ts
+*.vob
+
+# Videos Folder
+/Videos/*
+
 # Executable files
 *.exe
 *.out
