@@ -1,0 +1,54 @@
+{
+    "test_pbkdf2": {
+        "username": "test_pbkdf2",
+        "hash_algo": "pbkdf2_sha256",
+        "salt": "a332929a4b0b3df7b444336b11392dc6",
+        "password_hash": "09f5294337d79ec6d6ddc4515364deafbe22939c09dd4277ac90e624850b7ee4",
+        "role": "user",
+        "security_question": "First school?",
+        "security_salt": "aa232b6c0fd06c6b0550d541c307fb2c",
+        "security_hash": "a726d148461e0375465aa7f14bb30df0f1528ed3be33a7ae3200f58cd2f67d5e",
+        "failed_attempts": 0,
+        "lockout_until": null,
+        "created_at": "2026-05-20T13:08:39.672827"
+    },
+    "test_bcrypt": {
+        "username": "test_bcrypt",
+        "hash_algo": "bcrypt",
+        "salt": "embedded",
+        "password_hash": "$2b$12$vnOFtVbvNw7rhqR58dzpL.NNh9Tm.faCZBrumtrhHuPItHC4Wj6ly",
+        "role": "user",
+        "security_question": "First car?",
+        "security_salt": "58c91f3a0f787471aba32d8b1af61adf",
+        "security_hash": "c7c65ea8b55ed7c6af31df876b7a0005839d6e505fcb7cb10856efcf2abccbc1",
+        "failed_attempts": 0,
+        "lockout_until": null,
+        "created_at": "2026-05-20T13:08:40.241424"
+    },
+    "test_argon2": {
+        "username": "test_argon2",
+        "hash_algo": "argon2",
+        "salt": "embedded",
+        "password_hash": "$argon2id$v=19$m=65536,t=3,p=4$1g4ztnVqPhsMc0k7BsYi7w$RngrlD1h4RR4DRGWB85FXJO6a+Y9x63AM8iNbiDDsKA",
+        "role": "admin",
+        "security_question": "Favorite fruit?",
+        "security_salt": "7b2acf10640489b7b862e089295ebace",
+        "security_hash": "a5c183f68ec6054d20ba9c63c5b9628ddabed78ee4499f1bf34645c632ad72a1",
+        "failed_attempts": 0,
+        "lockout_until": null,
+        "created_at": "2026-05-20T13:08:40.454164"
+    },
+    "Barakat": {
+        "username": "Barakat",
+        "hash_algo": "pbkdf2_sha256",
+        "salt": "11f076c030edef6cbbbf65583fb06896",
+        "password_hash": "fb212654be389574419b31b2060275bc919ccd2cd6b487476b88dc84da2dbe2c",
+        "role": "user",
+        "security_question": "In what city were you born?",
+        "security_salt": "9ceee180a0ffe2fc55060a68d27f6daf",
+        "security_hash": "53eaeaf0287049e9d02a03af7d84016c5ffaa69fb1897cf1c27b8e7c54070925",
+        "failed_attempts": 3,
+        "lockout_until": "2026-05-20T19:37:55.971376",
+        "created_at": "2026-05-20T19:32:09.139779"
+    }
+}

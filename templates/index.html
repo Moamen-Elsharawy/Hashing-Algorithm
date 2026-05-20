@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aether Shield // Secure Authentication Lab</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="glow-bg"></div>
+    <div class="container">
+        
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-shield-halved logo-icon"></i>
+                <div class="logo-text">
+                    <h1>AETHER SHIELD</h1>
+                    <p>SECURE AUTHENTICATION & CRYPTOGRAPHY LAB</p>
+                </div>
+            </div>
+            <div class="server-status">
+                <span class="status-indicator online"></span>
+                <span class="status-text">SECURE LAYER ACTIVE</span>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="workspace-grid">
+            
+            <!-- Left Side: Authentication Hub / Active Dashboard -->
+            <section class="card auth-hub-card">
+                
+                <!-- Auth Hub (Logged Out State) -->
+                <div id="logged-out-view" class="auth-view">
+                    
+                    <!-- Tabs to switch between Login and Register -->
+                    <div class="tabs">
+                        <button id="tab-login-btn" class="tab-btn active" onclick="switchAuthTab('login')">
+                            <i class="fa-solid fa-right-to-bracket"></i> Login
+                        </button>
+                        <button id="tab-register-btn" class="tab-btn" onclick="switchAuthTab('register')">
+                            <i class="fa-solid fa-user-plus"></i> Register
+                        </button>
+                    </div>
+
+                    <!-- Login Card -->
+                    <div id="login-form-container" class="form-container">
+                        <h3>AUTHENTICATE CREDENTIALS</h3>
+                        <p class="subtitle">Enter username and password to log in.</p>
+                        
+                        <form id="login-form" onsubmit="handleLogin(event)">
+                            <div class="input-group">
+                                <label for="login-username"><i class="fa-solid fa-user"></i> Username</label>
+                                <input type="text" id="login-username" required placeholder="e.g. admin or alice">
+                            </div>
+                            
+                            <div class="input-group">
+                                <div class="label-wrapper">
+                                    <label for="login-password"><i class="fa-solid fa-key"></i> Password</label>
+                                    <span class="forgot-link" onclick="openResetModal()">Forgot Password?</span>
+                                </div>
+                                <div class="password-wrapper">
+                                    <input type="password" id="login-password" required placeholder="••••••••••••">
+                                    <i class="fa-solid fa-eye-slash toggle-pwd" onclick="togglePasswordVisibility('login-password', this)"></i>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="login-submit-btn">
+                                <span>SIGN IN</span> <i class="fa-solid fa-circle-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Register Card -->
+                    <div id="register-form-container" class="form-container hidden">
+                        <h3>REGISTER NEW ID</h3>
+                        <p class="subtitle">Plaintext passwords are never saved. Salted and hashed instantly.</p>
+                        
+                        <form id="register-form" onsubmit="handleRegister(event)">
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="reg-username"><i class="fa-solid fa-user"></i> Username</label>
+                                    <input type="text" id="reg-username" required placeholder="Username">
+                                </div>
+                                <div class="input-group">
+                                    <label for="reg-role"><i class="fa-solid fa-id-card"></i> Security Role</label>
+                                    <select id="reg-role" required>
+                                        <option value="user">Standard User</option>
+                                        <option value="admin">Administrator</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="reg-password"><i class="fa-solid fa-key"></i> Password</label>
+                                <div class="password-wrapper">
+                                    <input type="password" id="reg-password" required placeholder="Minimum 8 characters" onkeyup="checkPasswordStrength()">
+                                    <i class="fa-solid fa-eye-slash toggle-pwd" onclick="togglePasswordVisibility('reg-password', this)"></i>
+                                </div>
+                                <!-- Password Strength Meter -->
+                                <div class="strength-meter">
+                                    <div class="strength-bar" id="strength-bar"></div>
+                                    <span class="strength-text" id="strength-text">Too short</span>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="reg-question"><i class="fa-solid fa-circle-question"></i> Security Reset Question</label>
+                                <select id="reg-question" required>
+                                    <option value="" disabled selected>Select a secret question...</option>
+                                    <option value="What was the name of your first pet?">What was the name of your first pet?</option>
+                                    <option value="What is your favorite book?">What is your favorite book?</option>
+                                    <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+                                    <option value="In what city were you born?">In what city were you born?</option>
+                                    <option value="What was your childhood nickname?">What was your childhood nickname?</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="reg-answer"><i class="fa-solid fa-circle-check"></i> Question Answer (Salted & Hashed)</label>
+                                <input type="text" id="reg-answer" required placeholder="Keep this secret">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="reg-algo"><i class="fa-solid fa-gears"></i> Cryptographic Hashing Engine</label>
+                                <select id="reg-algo" required class="engine-selector">
+                                    <option value="pbkdf2_sha256" selected>PBKDF2-HMAC-SHA256 (Built-in standard)</option>
+                                    <option value="bcrypt">Bcrypt (Production standard)</option>
+                                    <option value="argon2">Argon2id (State-of-the-art)</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-secondary">
+                                <span>INITIALIZE ID</span> <i class="fa-solid fa-user-plus"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Dashboard (Logged In State) -->
+                <div id="logged-in-view" class="auth-view hidden">
+                    <div class="dashboard-header">
+                        <div class="user-profile">
+                            <div class="avatar">
+                                <i class="fa-solid fa-circle-user"></i>
+                            </div>
+                            <div class="profile-details">
+                                <span class="profile-welcome">Welcome back,</span>
+                                <h2 id="dash-username">Username</h2>
+                                <span class="badge" id="dash-role-badge">USER</span>
+                            </div>
+                        </div>
+                        <button class="logout-btn" onclick="handleLogout()">
+                            <i class="fa-solid fa-right-from-bracket"></i> Logout
+                        </button>
+                    </div>
+
+                    <div class="dashboard-content">
+                        
+                        <!-- Standard User Content -->
+                        <div id="user-dashboard-view" class="role-view">
+                            <div class="status-card success">
+                                <i class="fa-solid fa-circle-check info-icon"></i>
+                                <div class="status-desc">
+                                    <h4>AUTHENTICATION SECURE</h4>
+                                    <p>Your session is active. Active session tokens are stored securely and verified against timing attacks.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="info-grid">
+                                <div class="info-box">
+                                    <span class="info-label">Active Session ID</span>
+                                    <span class="info-value text-truncate" id="user-token-value">No token available</span>
+                                </div>
+                                <div class="info-box">
+                                    <span class="info-label">Security Role</span>
+                                    <span class="info-value" id="user-role-value">User</span>
+                                </div>
+                            </div>
+
+                            <div class="banner">
+                                <h5><i class="fa-solid fa-user-shield"></i> Privilege Restrictions</h5>
+                                <p>You have standard reader/operator permissions. To unlock administrative panels, inspect systems logs, or modify user database records, log in using an <strong>Admin account</strong> (e.g. username: <code>admin</code>, password: <code>AdminPassword123!</code>).</p>
+                            </div>
+                        </div>
+
+                        <!-- Admin dashboard Content -->
+                        <div id="admin-dashboard-view" class="role-view hidden">
+                            <div class="admin-tabs">
+                                <button class="admin-tab active" onclick="switchAdminTab('users')"><i class="fa-solid fa-users-gear"></i> User Control</button>
+                                <button class="admin-tab" onclick="switchAdminTab('logs')"><i class="fa-solid fa-clipboard-list"></i> Security Audits</button>
+                            </div>
+
+                            <!-- Admin: User Management -->
+                            <div id="admin-users-panel" class="admin-panel">
+                                <div class="panel-header">
+                                    <h4>User Directory & Access Control</h4>
+                                    <span class="pill">RBAC ACTIVE</span>
+                                </div>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>User</th>
+                                                <th>Role</th>
+                                                <th>Algorithm</th>
+                                                <th>Fails</th>
+                                                <th>Lock Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-users-table-body">
+                                            <!-- Dynamic load -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Admin: Security Audits -->
+                            <div id="admin-logs-panel" class="admin-panel hidden">
+                                <div class="panel-header">
+                                    <h4>System Security Logs</h4>
+                                    <button class="btn-icon" onclick="loadAdminLogs()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+                                </div>
+                                <div class="logs-container" id="admin-logs-list">
+                                    <!-- Dynamic load -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Toast Notification Container -->
+                <div id="toast-message" class="toast hidden">
+                    <span id="toast-text">Success Message</span>
+                </div>
+            </section>
+
+            <!-- Right Side: Developer & Security Sandbox -->
+            <section class="card sandbox-card">
+                <div class="sandbox-header">
+                    <h3>DEVELOPER & SECURITY LAB Drawer</h3>
+                    <div class="sandbox-badge"><i class="fa-solid fa-bug"></i> LIVE ENVIRONMENT</div>
+                </div>
+
+                <!-- Sandbox Content (Sub-Tabs) -->
+                <div class="sandbox-tabs">
+                    <button class="sandbox-tab active" onclick="switchSandboxTab('db')"><i class="fa-solid fa-database"></i> Live DB (users.json)</button>
+                    <button class="sandbox-tab" onclick="switchSandboxTab('sessions')"><i class="fa-solid fa-network-wired"></i> Session Tokens</button>
+                    <button class="sandbox-tab" onclick="switchSandboxTab('timing')"><i class="fa-solid fa-stopwatch"></i> Timing Attack Simulator</button>
+                </div>
+
+                <!-- Panel 1: Live DB Viewer -->
+                <div id="sandbox-db-panel" class="sandbox-panel">
+                    <div class="panel-desc">
+                        <p><i class="fa-solid fa-circle-info"></i> Direct raw inspection of <strong>users.json</strong>. Notice that <strong>no plaintext passwords are saved</strong>. Salts are generated randomly, and hashes are computed securely.</p>
+                    </div>
+                    <div class="code-header">
+                        <span>users.json</span>
+                        <button class="btn-icon" onclick="loadLiveDatabase()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                    </div>
+                    <pre><code id="db-json-block" class="language-json">Loading database state...</code></pre>
+                </div>
+
+                <!-- Panel 2: Session Monitor -->
+                <div id="sandbox-sessions-panel" class="sandbox-panel hidden">
+                    <div class="panel-desc">
+                        <p><i class="fa-solid fa-circle-info"></i> Monitors the in-memory server session store. Tokens are high-entropy, cryptographically secure hashes generated on login and fully destroyed on logout.</p>
+                    </div>
+                    <div class="code-header">
+                        <span>active_sessions (Memory Cache)</span>
+                        <button class="btn-icon" onclick="loadActiveSessions()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                    </div>
+                    <pre><code id="sessions-json-block" class="language-json">Loading active sessions...</code></pre>
+                </div>
+
+                <!-- Panel 3: Timing Attack Simulation -->
+                <div id="sandbox-timing-panel" class="sandbox-panel hidden">
+                    <div class="panel-desc">
+                        <p><i class="fa-solid fa-clock"></i> <strong>Timing Attack Simulation</strong>: Compare character-by-character validation (which exits early at mismatch, leaking match length) against Python's <code>secrets.compare_digest()</code> which runs in flat, constant time.</p>
+                    </div>
+                    
+                    <div class="timing-sandbox-box">
+                        <div class="simulation-inputs">
+                            <div class="input-group">
+                                <label>Target Secret Value (Fixed on Server)</label>
+                                <div class="token-secret">secure_token_secret_xyz</div>
+                            </div>
+                            <div class="input-group">
+                                <label for="timing-candidate">Test Candidate String</label>
+                                <input type="text" id="timing-candidate" value="secure_token_abc" placeholder="Enter candidate guess" oninput="runTimingAttack()">
+                            </div>
+                        </div>
+
+                        <div class="simulation-results">
+                            <h4>Comparison Timing Results (Amplified 50,000x)</h4>
+                            
+                            <div class="metric-container">
+                                <div class="metric-row">
+                                    <div class="metric-name">
+                                        <strong>Early-Exit Operator (==)</strong>
+                                        <span>Exits on first mismatch</span>
+                                    </div>
+                                    <div class="metric-visual">
+                                        <div class="metric-bar-wrapper">
+                                            <div class="metric-bar early-exit-bar" id="early-exit-bar" style="width: 50%;"></div>
+                                        </div>
+                                        <span class="metric-time" id="early-exit-time">0.00 us</span>
+                                    </div>
+                                </div>
+
+                                <div class="metric-row">
+                                    <div class="metric-name">
+                                        <strong>Constant-Time (secrets.compare_digest)</strong>
+                                        <span>Timing-safe compare</span>
+                                    </div>
+                                    <div class="metric-visual">
+                                        <div class="metric-bar-wrapper">
+                                            <div class="metric-bar constant-bar" id="constant-bar" style="width: 50%;"></div>
+                                        </div>
+                                        <span class="metric-time" id="constant-time">0.00 us</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="attack-verdict" id="timing-verdict">
+                                <div class="info-alert">
+                                    <i class="fa-solid fa-brain"></i>
+                                    <span>Type characters matching the secret (e.g. starting with "s", then "se", then "sec") to watch the Early-Exit time increase, revealing matching characters. The Constant-Time operator remains flat.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Password Reset Flow Modal -->
+    <div id="reset-modal" class="modal hidden">
+        <div class="modal-content card">
+            <div class="modal-header">
+                <h3>PASSWORD RESET LAB</h3>
+                <span class="close-btn" onclick="closeResetModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                
+                <!-- Step 1: Username Check -->
+                <div id="reset-step-1">
+                    <p class="modal-subtitle">Enter your username to retrieve your secret security question.</p>
+                    <div class="input-group">
+                        <label for="reset-username"><i class="fa-solid fa-user"></i> Username</label>
+                        <input type="text" id="reset-username" placeholder="e.g. admin or alice">
+                    </div>
+                    <button class="btn btn-primary" onclick="requestSecurityQuestion()">
+                        <span>GET SECURITY QUESTION</span> <i class="fa-solid fa-question-circle"></i>
+                    </button>
+                </div>
+
+                <!-- Step 2: Answer Question & Change -->
+                <div id="reset-step-2" class="hidden">
+                    <div class="question-banner">
+                        <span class="question-label">SECURITY QUESTION</span>
+                        <h4 id="reset-question-text">Your security question here</h4>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="reset-answer"><i class="fa-solid fa-key"></i> Secret Answer</label>
+                        <input type="text" id="reset-answer" placeholder="Enter your secret answer">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="reset-new-password"><i class="fa-solid fa-lock"></i> New Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="reset-new-password" placeholder="Enter new strong password">
+                            <i class="fa-solid fa-eye-slash toggle-pwd" onclick="togglePasswordVisibility('reset-new-password', this)"></i>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="confirmPasswordReset()">
+                        <span>RESET PASSWORD</span> <i class="fa-solid fa-circle-check"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <!-- Custom JS -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
