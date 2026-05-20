@@ -301,12 +301,10 @@ def simulate_timing():
     
     # 1. Non-constant time comparison simulation
     def early_exit_compare(str1, str2):
-        if len(str1) != len(str2):
-            return False
         for char1, char2 in zip(str1, str2):
             if char1 != char2:
                 return False
-        return True
+        return len(str1) == len(str2)
 
     # Run early exit loop
     start_time = time.perf_counter_ns()
@@ -314,9 +312,9 @@ def simulate_timing():
         _ = early_exit_compare(candidate, secret)
     early_exit_time = time.perf_counter_ns() - start_time
     
-    # 2. Constant time comparison using secrets.compare_digest
+    # 2. Constant time comparison using secrets.compare_digest (scaled to 500,000 iterations to match Python loop speed)
     start_time = time.perf_counter_ns()
-    for _ in range(50000):
+    for _ in range(500000):
         _ = auth_manager.secrets.compare_digest(candidate, secret)
     constant_time = time.perf_counter_ns() - start_time
     
