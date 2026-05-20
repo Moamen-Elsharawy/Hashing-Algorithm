@@ -1,0 +1,25 @@
+# Compiled Python files
+__pycache__
+
+# compressed files
+*.rar
+*.zip
+*.7z
+*.tar
+*.gz
+
+# Executable files
+*.exe
+*.out
+*.bin
+
+# Logs
+*.log
+
+# Environment variables
+.env
+
+# IDE files
+.vscode
+.idea
+*.swp
